@@ -12,7 +12,7 @@ namespace Share
     public class UserEmailState
     {
         List<Description> _descriptions = null;
-        public List<Description> Descriptions
+        public List<Description> Descriptions //comment: not used?
         {
             get
             {
@@ -73,19 +73,19 @@ namespace Share
             MailAddress = null;
         }
 
-        public UserEmailState(string mailAddress) 
+        public UserEmailState(string mailAddress)
         {
             MailAddress = new MailAddress(mailAddress);
         }
 
-        public void AddDescription(string text)
+        public void AddDescription(string text) //comment: not used? but: since this method exists the Descriptions property should be a readonly collection, only allowing adding of descriptions via this method 
         {
             Descriptions.Add(new Description(text));
         }
 
         public override string ToString()
         {
-            return $"{Constants.CAPTION_EMAIL}{Address}{System.Environment.NewLine}{System.Environment.NewLine}{string.Join(System.Environment.NewLine, Constants.CAPTION_DESCRIPTION,  Descriptions)}";
+            return $"{Constants.CAPTION_EMAIL}{Address}{System.Environment.NewLine}{System.Environment.NewLine}{string.Join(System.Environment.NewLine, Constants.CAPTION_DESCRIPTION, Descriptions)}";
         }
 
         public override bool Equals(object obj)

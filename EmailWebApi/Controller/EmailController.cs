@@ -20,7 +20,7 @@ namespace EmailWebApi.Controller
 
         [HttpGet]
         [Route("{email}")]
-        public string Get(string email)
+        public string Get(string email)  //comment: return IHttpActionResult and use controller base methods "OK()" and "NotFound()"
         {
             try
             {
@@ -35,7 +35,7 @@ namespace EmailWebApi.Controller
 
         [HttpPost]
         [Route("{email}")]
-        public string Add(string email)
+        public string Add(string email) //comment: return IHttpActionResult and use controller base methods "Created()" and "Conflict()"
         {
             try
             {

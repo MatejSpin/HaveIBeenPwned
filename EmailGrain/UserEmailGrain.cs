@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace EmailGrain
 {
     [StorageProvider(ProviderName = "AzureBlobStorage")]
-    public class UserEmailGrain : Orleans.Grain<List<UserEmailState>>, IUserEmailGrain
+    public class UserEmailGrain : Orleans.Grain<List<UserEmailState>>, IUserEmailGrain //comment: use more appropriate collection (HashSet)
     {
         Task<IGrainReminder> GrainReminder { get; set; }
 
@@ -22,10 +22,9 @@ namespace EmailGrain
         /// <param name="emailAddress">email address</param>
         /// <param name="text">Text about reasons for breaching</param>
         /// <returns>Returns email object wrapped in asynchronious operation</returns>
-        public Task<UserEmailState> AddEmailAddress(string emailAddress, string text = "")
+        public Task<UserEmailState> AddEmailAddress(string emailAddress, string text = "") //comment: unused variable "text"
         {
             UserEmailState userEmail = GetMailAddressFromCollection(emailAddress);
-
             switch (userEmail.Message.Status)
             {
                 case Status.NOT_FOUND:
@@ -38,7 +37,7 @@ namespace EmailGrain
                 case Status.OK: break;
                 case Status.HOST_NOT_SUPPORTED: break;
                 case Status.PWNED:
-                   // userEmail.AddDescription(text);
+                    // userEmail.AddDescription(text);
                     break;
             }
 
@@ -68,7 +67,9 @@ namespace EmailGrain
             }
         }
 
-        UserEmailState GetMailAddressFromCollection(string mailAddress)
+        UserEmailState GetMailAddressFromCollection(string mailAddress) //comment: method name is ambiguous... 
+                                                                        //Its "Get"..actually seems to create and return an email
+                                                                        //Also this method seems to always create an email address - duplicates possible!
         {
             UserEmailState userEmail = CreateUserMailAddress(mailAddress);
 
@@ -78,7 +79,9 @@ namespace EmailGrain
                 {
                     //if (State.Address.ToLower() == userEmail.Address.ToLower())
                     //    return State;
-                    userEmail = State.First(be => be.Address.ToLower() == userEmail.Address.ToLower());
+
+
+                    userEmail = State.First(be => be.Address.ToLower() == userEmail.Address.ToLower()); //comment: use Equals with stringcomparison param
                 }
                 catch (ArgumentNullException ex)
                 {
@@ -97,7 +100,7 @@ namespace EmailGrain
 
         public Task<UserEmailState> IsEmailAddressPwned(string mailAddress)
         {
-            ReadStateAsync(); //before every check, load the latest state
+            ReadStateAsync(); //before every check, load the latest state //comment: no await, latest state not guaranteed before return!
             return Task.FromResult(GetMailAddressFromCollection(mailAddress));
         }
 
@@ -105,7 +108,7 @@ namespace EmailGrain
         {
             Console.WriteLine("Activated grain {0}", this.GrainReference.ToKeyString());
             //reminder for every 5min
-            GrainReminder = RegisterOrUpdateReminder("reminderEvery5min", new TimeSpan(0, 0, 0), new TimeSpan(0,5,0));
+            GrainReminder = RegisterOrUpdateReminder("reminderEvery5min", new TimeSpan(0, 0, 0), new TimeSpan(0, 5, 0));
             return base.OnActivateAsync();
         }
 
@@ -113,7 +116,7 @@ namespace EmailGrain
         {
             Console.WriteLine("Deactivated grain {0}", this.GrainReference.ToKeyString());
             WriteStateAsync();//save the latest state
-            UnregisterReminder(GrainReminder.Result); 
+            UnregisterReminder(GrainReminder.Result);
             return base.OnDeactivateAsync();
         }
 
