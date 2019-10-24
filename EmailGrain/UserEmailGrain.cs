@@ -100,7 +100,7 @@ namespace EmailGrain
 
         public Task<UserEmailState> IsEmailAddressPwned(string mailAddress)
         {
-            ReadStateAsync(); //before every check, load the latest state //comment: no await, latest state not guaranteed before return!
+            ReadStateAsync(); //before every check, load the latest state //comment: no await, latest state not guaranteed before return! Could also have a flag that state changed and only update state if it has changed 
             return Task.FromResult(GetMailAddressFromCollection(mailAddress));
         }
 
