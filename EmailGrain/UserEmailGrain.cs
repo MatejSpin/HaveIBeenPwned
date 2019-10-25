@@ -69,7 +69,8 @@ namespace EmailGrain
 
         UserEmailState GetMailAddressFromCollection(string mailAddress) //comment: method name is ambiguous... 
                                                                         //Its "Get"..actually seems to create and return an email
-                                                                        //Also this method seems to always create an email address - duplicates possible!
+                                                                        //Also this method seems to always create an email address: MIMA: yes, it creates but it does not store it into list
+                                                                        //duplicates possible! MIMA: Possible, but it should not be 
         {
             UserEmailState userEmail = CreateUserMailAddress(mailAddress);
 
@@ -82,6 +83,7 @@ namespace EmailGrain
 
 
                     userEmail = State.First(be => be.Address.ToLower() == userEmail.Address.ToLower()); //comment: use Equals with stringcomparison param
+                                                                                                        //MIMA: acknowledged
                 }
                 catch (ArgumentNullException ex)
                 {
