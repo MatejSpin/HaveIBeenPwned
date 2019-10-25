@@ -11,8 +11,10 @@ using System.Threading.Tasks;
 
 namespace EmailGrain
 {
+    //comment: use more appropriate collection (HashSet)
+    //MIMA: acknowledged :)
     [StorageProvider(ProviderName = "AzureBlobStorage")]
-    public class UserEmailGrain : Orleans.Grain<List<UserEmailState>>, IUserEmailGrain //comment: use more appropriate collection (HashSet)
+    public class UserEmailGrain : Orleans.Grain<List<UserEmailState>>, IUserEmailGrain 
     {
         Task<IGrainReminder> GrainReminder { get; set; }
 
@@ -23,7 +25,8 @@ namespace EmailGrain
         /// <param name="text">Text about reasons for breaching</param>
         /// <returns>Returns email object wrapped in asynchronious operation</returns>
         public Task<UserEmailState> AddEmailAddress(string emailAddress, string text = "") //comment: unused variable "text"
-        {
+        {//MIMA: it was used, but later with WebApi I commented it out. Purpose was that with one email you can add more descriptions 
+         //like they are on site https://haveibeenpwned.com/
             UserEmailState userEmail = GetMailAddressFromCollection(emailAddress);
             switch (userEmail.Message.Status)
             {
