@@ -18,9 +18,11 @@ namespace EmailWebApi.Controller
             }
         }
 
+        //comment: return IHttpActionResult and use controller base methods "OK()" and "NotFound()"
+        //MIMA: web field is not my area at all.. 
         [HttpGet]
         [Route("{email}")]
-        public string Get(string email)  //comment: return IHttpActionResult and use controller base methods "OK()" and "NotFound()"
+        public string Get(string email)  
         {
             try
             {
